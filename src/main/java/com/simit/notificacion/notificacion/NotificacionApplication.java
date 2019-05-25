@@ -8,6 +8,8 @@ import java.util.concurrent.TimeoutException;
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -21,18 +23,18 @@ import com.simit.notificacion.entidades.ETC;
 import freemarker.template.TemplateException;
 
 @SpringBootApplication
-public class NotificacionApplication {
+public class NotificacionApplication implements ApplicationRunner {
 	
 	@Autowired
-	public static EmailService emailService;
+	public EmailService emailService;
 
 	public static void main(String[] args) throws IOException, TimeoutException {
 		SpringApplication.run(NotificacionApplication.class, args);
-		startQueueConsumer();
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
-	private static void startQueueConsumer() throws IOException, TimeoutException {
+	public void run(ApplicationArguments applicationArguments) throws Exception {
 		System.out.println("Queue consumer is running...");
 		DeliverCallback callback = (consumerTag, delivery) -> {
 			ETC etc = new ETC();
@@ -55,8 +57,7 @@ public class NotificacionApplication {
 	    channel.basicConsume(EnvioNotificacion.MAIL_QUEUE, true, callback, consumerTag -> { });
 	}
 	
-	private static void sendEmail(ETC etc, String tipo, Map<String, String> payload) {
-		//armar meil
+	private void sendEmail(ETC etc, String tipo, Map<String, String> payload) {
 		Mail mail = new Mail();
 		mail.setModel(payload);
 		mail.setContent("");
@@ -64,7 +65,7 @@ public class NotificacionApplication {
 		mail.setSubject("Notificación pago.");
 		mail.setTo(etc.getCorreo());
 		try {
-			emailService.sendSimpleMessage(new Mail());
+			emailService.sendSimpleMessage(mail);
 		} catch (MessagingException | IOException | TemplateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

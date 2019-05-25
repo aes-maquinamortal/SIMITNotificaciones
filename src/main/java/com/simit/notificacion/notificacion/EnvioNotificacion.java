@@ -20,7 +20,7 @@ public class EnvioNotificacion {
 	
 	@WebMethod(action = "envioNotificacionUtilidad")
 	public void envioNotificacionUtilidad(ETC etc, String tipo, String jsonPayload) {
-		ConnectionFactory factory = new com.rabbitmq.client.ConnectionFactory();
+		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost("localhost");
 		factory.setPort(5672);
 		try ( Connection connection = factory.newConnection();
