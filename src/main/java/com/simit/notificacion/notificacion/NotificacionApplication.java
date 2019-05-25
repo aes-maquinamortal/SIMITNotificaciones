@@ -48,7 +48,7 @@ public class NotificacionApplication implements ApplicationRunner {
 			sendEmail(etc, tipo, payload);
 		};
 		ConnectionFactory factory = new ConnectionFactory();
-	    factory.setHost("localhost");
+	    factory.setHost("some-rabbit");
 	    factory.setPort(5672);
 	    Connection connection = factory.newConnection();
 	    Channel channel = connection.createChannel();
