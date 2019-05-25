@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
+import javax.mail.MessagingException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -13,9 +16,15 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
+import com.simit.notificacion.entidades.ETC;
+
+import freemarker.template.TemplateException;
 
 @SpringBootApplication
 public class NotificacionApplication {
+	
+	@Autowired
+	public static EmailService emailService;
 
 	public static void main(String[] args) throws IOException, TimeoutException {
 		SpringApplication.run(NotificacionApplication.class, args);
@@ -26,9 +35,15 @@ public class NotificacionApplication {
 	private static void startQueueConsumer() throws IOException, TimeoutException {
 		System.out.println("Queue consumer is running...");
 		DeliverCallback callback = (consumerTag, delivery) -> {
+			ETC etc = new ETC();
 			String message = new String(delivery.getBody(), "UTF-8");
 			final Gson gson = new Gson();
 			final Map<String, String> messageMap = gson.fromJson(message, HashMap.class);
+			etc = gson.fromJson(messageMap.get("etc"), ETC.class);
+			final String tipo = messageMap.get("tipo");
+			final Map<String, String> payload = gson.fromJson(messageMap.get("payload"), HashMap.class);
+			
+			sendEmail(etc, tipo, payload);
 		};
 		ConnectionFactory factory = new ConnectionFactory();
 	    factory.setHost("localhost");
@@ -38,6 +53,22 @@ public class NotificacionApplication {
 
 	    channel.queueDeclare(EnvioNotificacion.MAIL_QUEUE, false, false, false, null);
 	    channel.basicConsume(EnvioNotificacion.MAIL_QUEUE, true, callback, consumerTag -> { });
+	}
+	
+	private static void sendEmail(ETC etc, String tipo, Map<String, String> payload) {
+		//armar meil
+		Mail mail = new Mail();
+		mail.setModel(payload);
+		mail.setContent("");
+		mail.setFrom("mailer.nodejs2019@gmail.com");
+		mail.setSubject("Notificación pago.");
+		mail.setTo(etc.getCorreo());
+		try {
+			emailService.sendSimpleMessage(new Mail());
+		} catch (MessagingException | IOException | TemplateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
