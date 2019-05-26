@@ -21,20 +21,21 @@
     <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;">
         <tr>
             <td align="center" bgcolor="#78ab46" style="padding: 40px 0 30px 0;">
-                <img alt="https://memorynotfound.com" style="display: block;" />
+                <h1>Notificación de pago</h1>
             </td>
         </tr>
         <tr>
             <td bgcolor="#eaeaea" style="padding: 40px 30px 40px 30px;">
-                <p>Dear ${name},</p>
-                <p>Sending Email using Spring Boot with <b>FreeMarker template !!!</b></p>
-                <p>Thanks</p>
+                <p>Estimado ${name},</p>
+                <p>Tu pago mensual ha sido realizado por un valor de ${paymentValue}. Cualquier duda o reclamo hacerla a contacto@simit.org.co.</p>
+                <p>Gracias</p>
             </td>
         </tr>
         <tr>
             <td bgcolor="#777777" style="padding: 30px 30px 30px 30px;">
-                <p>${signature}</p>
-                <p>${location}</p>
+                <p>Dirección Nacional Bogotá, DC Email: contactosimit@fcm.org.co</p> 
+				<p>Carrera 7 N° 74 - 64, Piso 10 PBX: (57 + 1) 593 40 20 </p>
+				<p>Horario de Atención: 8 a. m. a 5 p. m. Jornada continua</p>
             </td>
         </tr>
     </table>
