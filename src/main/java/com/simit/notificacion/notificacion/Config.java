@@ -34,7 +34,7 @@ public class Config extends WsConfigurerAdapter {
     @Bean
     public Endpoint helloWorldEndpoint() {
         EndpointImpl endpoint = new EndpointImpl(springBus(), envioNotificacion);
-        endpoint.publish("helloWorld");
+        endpoint.publish("simit");
         return endpoint;
     }
 }

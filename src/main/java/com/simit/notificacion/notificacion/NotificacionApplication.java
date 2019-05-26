@@ -37,6 +37,7 @@ public class NotificacionApplication implements ApplicationRunner {
 	public void run(ApplicationArguments applicationArguments) throws Exception {
 		System.out.println("Queue consumer is running...");
 		DeliverCallback callback = (consumerTag, delivery) -> {
+			System.out.println("Processing queue item...");
 			ETC etc = new ETC();
 			String message = new String(delivery.getBody(), "UTF-8");
 			final Gson gson = new Gson();
@@ -48,7 +49,7 @@ public class NotificacionApplication implements ApplicationRunner {
 			sendEmail(etc, tipo, payload);
 		};
 		ConnectionFactory factory = new ConnectionFactory();
-	    factory.setHost("some-rabbit");
+	    factory.setHost("notifications_queue");
 	    factory.setPort(5672);
 	    Connection connection = factory.newConnection();
 	    Channel channel = connection.createChannel();

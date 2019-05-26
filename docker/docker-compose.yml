@@ -1,0 +1,28 @@
+version: '2.3'
+services:
+  simit-notifications:
+    build: ./
+    depends_on:
+      - notifications-queue
+    expose:
+      - 8081
+  notifications-queue:
+    image: rabbitmq:3
+    container_name: notifications_queue
+    expose:
+      - 5672
+  load-balancer-notifications:
+    image: nginx
+    container_name: lb_notifications
+    ports:
+      - 8081:8081
+    volumes:
+      - type: bind
+        source: ./load-balancer.conf
+        target: /etc/nginx/nginx.conf
+    depends_on:
+      - simit-notifications
+networks:
+  default:
+    external:
+      name: simit_network

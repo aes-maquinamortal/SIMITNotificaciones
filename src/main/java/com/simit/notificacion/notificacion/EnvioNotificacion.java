@@ -21,7 +21,7 @@ public class EnvioNotificacion {
 	@WebMethod(action = "envioNotificacionUtilidad")
 	public void envioNotificacionUtilidad(ETC etc, String tipo, String jsonPayload) {
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost("some-rabbit");
+		factory.setHost("notifications_queue");
 		factory.setPort(5672);
 		try ( Connection connection = factory.newConnection();
 			  Channel channel = connection.createChannel()
