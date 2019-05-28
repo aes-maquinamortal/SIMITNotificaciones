@@ -62,7 +62,7 @@ public class NotificacionApplication implements ApplicationRunner {
 		Mail mail = new Mail();
 		mail.setModel(payload);
 		mail.setContent("");
-		mail.setFrom("mailer.nodejs2019@gmail.com");
+		mail.setFrom("serviciosali.contacto@gmail.com");
 		mail.setSubject("Notificación pago.");
 		mail.setTo(etc.getCorreo());
 		try {
